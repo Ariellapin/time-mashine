@@ -12,6 +12,9 @@ FileGuardian uses **NTFS Hard Links** to protect your files.
 
 > **Note**: Because Hard Links point to the *same data*, if you **modify** the content of the file, the protected version changes too. This tool protects against **deletion**, not unwanted edits.
 
+> **Why does the Vault folder look so big?**
+> Windows Explorer reports the full size of the file for *every* link. If you protect a 1GB file, Explorer will say the Vault is also 1GB. **Do not worry!** This is an illusion. Both files point to the same data, so you are using 1GB of disk space total, not 2GB. You can verify this by checking your "Free Space" before and after protection.
+
 ## Features
 
 - **Protect Individual Files**: Select specific files to safeguard.
