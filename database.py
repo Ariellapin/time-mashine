@@ -12,7 +12,11 @@ def init_db():
             original_path TEXT NOT NULL UNIQUE,
             backup_path TEXT NOT NULL,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
+        );
+        CREATE TABLE IF NOT EXISTS monitored_folders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            path TEXT NOT NULL UNIQUE
+        );
     ''')
     conn.commit()
     conn.close()
@@ -52,3 +56,33 @@ def get_file_by_id(file_id):
     row = cursor.fetchone()
     conn.close()
     return row
+
+def add_monitored_folder(path):
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    try:
+        cursor.execute('INSERT OR IGNORE INTO monitored_folders (path) VALUES (?)', (path,))
+        conn.commit()
+    finally:
+        conn.close()
+
+def remove_monitored_folder(path):
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM monitored_folders WHERE path = ?', (path,))
+    conn.commit()
+    conn.close()
+
+def get_monitored_folders():
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    # Check if table exists first (migration for existing users)
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='monitored_folders'")
+    if not cursor.fetchone():
+        return []
+    
+    cursor.execute('SELECT path FROM monitored_folders')
+    rows = cursor.fetchall()
+    conn.close()
+    return [row[0] for row in rows]
+
