@@ -6,7 +6,7 @@ DB_NAME = "history_saver.db"
 def init_db():
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
-    cursor.execute('''
+    cursor.executescript('''
         CREATE TABLE IF NOT EXISTS files (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             original_path TEXT NOT NULL UNIQUE,
